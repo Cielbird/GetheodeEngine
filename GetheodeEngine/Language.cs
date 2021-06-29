@@ -19,7 +19,7 @@ namespace GetheodeEngine
             string tostring = Name + " :"+ GetHashCode() + "\n";
             foreach(Lect lect in Lects)
             {
-                tostring += "\t" + lect.ToString();
+                tostring += "-"+lect.ToString()+"\n";
             }
             return tostring;
         }
