@@ -4,3 +4,4 @@ A C# library that provides tools for constructing fictional languages. The end g
 
 This is an early version of a project I have just begun developing.
 
+Geþeode `/jeˈθe͜oː.de/` is Old English for "language"
