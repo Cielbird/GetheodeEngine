@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.810.3
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GetheodeEngine", "GetheodeEngine.csproj", "{F5708282-A3B7-430A-9787-28C9DCA86A56}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GetheodeConsole", "GetheodeConsole\GetheodeConsole.csproj", "{2AB0926E-D743-4BD7-982A-D88DC7288DC8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GetheodeEngine", "GetheodeEngine\GetheodeEngine.csproj", "{94F17DCF-B0C0-45EE-A2D4-999E5D6CFB3E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,10 +13,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{F5708282-A3B7-430A-9787-28C9DCA86A56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F5708282-A3B7-430A-9787-28C9DCA86A56}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F5708282-A3B7-430A-9787-28C9DCA86A56}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F5708282-A3B7-430A-9787-28C9DCA86A56}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2AB0926E-D743-4BD7-982A-D88DC7288DC8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2AB0926E-D743-4BD7-982A-D88DC7288DC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2AB0926E-D743-4BD7-982A-D88DC7288DC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2AB0926E-D743-4BD7-982A-D88DC7288DC8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{94F17DCF-B0C0-45EE-A2D4-999E5D6CFB3E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94F17DCF-B0C0-45EE-A2D4-999E5D6CFB3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{94F17DCF-B0C0-45EE-A2D4-999E5D6CFB3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94F17DCF-B0C0-45EE-A2D4-999E5D6CFB3E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
