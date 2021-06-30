@@ -8,9 +8,9 @@ namespace GetheodeEngine
         class PhonemeRealization
         {
             readonly string context;
-            readonly char realization;
+            readonly IPAChar realization;
 
-            public PhonemeRealization(string context, char realization)
+            public PhonemeRealization(string context, IPAChar realization)
             {
                 this.context = context;
                 this.realization = realization;
@@ -31,7 +31,7 @@ namespace GetheodeEngine
             realizations = new List<PhonemeRealization>();
         }
 
-        public void AddRealization(string context, char realization)
+        public void AddRealization(string context, IPAChar realization)
         {
             realizations.Add(new PhonemeRealization(context, realization));
         }

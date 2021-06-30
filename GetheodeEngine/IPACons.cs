@@ -34,6 +34,7 @@ namespace GetheodeEngine
         public static Dictionary<char, IPACons> vowels = new Dictionary<char, IPACons>
         {
             {'p', new IPACons(PlcOfArt.Bilab, ManOfArt.Plos, false) },
+            {'b', new IPACons(PlcOfArt.Bilab, ManOfArt.Plos, true) },
             {'t', new IPACons(PlcOfArt.Alveolar, ManOfArt.Plos, false) },
             {'k', new IPACons(PlcOfArt.Velar, ManOfArt.Plos, false) },
             {'n', new IPACons(PlcOfArt.Alveolar, ManOfArt.Nasal, true) },
@@ -59,8 +60,6 @@ namespace GetheodeEngine
             PlaceOfArt = place;
             MannerOfArt = manner;
             Voiced = voiced;
-            //Throw an exception if the consonant doesn't exist
-            EvalToChar();
         }
 
         /// <summary>Gets the coresponding character</summary>
@@ -78,9 +77,9 @@ namespace GetheodeEngine
         /// <param name="c">The char to use</param>
         public static explicit operator IPACons(char c)
         {
-            if (!vowels.ContainsKey(c))
-                throw new ArgumentException("char is not part of the IPA consonant library.");
-            return vowels[c];
+            if (vowels.ContainsKey(c))
+                return vowels[c];
+            throw new ArgumentException("char is not part of the IPA consonant library.");
         }
 
         public static bool operator ==(IPACons left, IPACons right)
