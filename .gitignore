@@ -1,8 +1,8 @@
 
 .vs
 
-GetheodeEngine/obj/
-GetheodeEngine/bin/
+**/Debug/**
 
-GetheodeConsole/obj/
-GetheodeConsole/bin/
+**/Build/**
+
+*/obj
