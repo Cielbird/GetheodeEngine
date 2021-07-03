@@ -1,8 +1,5 @@
 
 .vs
 
-**/Debug/**
-
-**/Build/**
-
-*/obj
+**/obj/**
+**/bin/**
