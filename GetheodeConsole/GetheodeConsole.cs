@@ -10,6 +10,8 @@ class GetheodeConsole
 
     static void Main()
     {
+        PhonologicalRule rule = new PhonologicalRule("[] -> [-voi] / [-voi]_");
+
         PhonemeContextTree.ParseContextString("((CC)C)(C)");
 
         Language english_lang = new Language("english");

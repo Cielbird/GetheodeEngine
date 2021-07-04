@@ -5,7 +5,8 @@ namespace GetheodeEngine
 {
     public class Phonology
     {
-        readonly List<Phoneme> phonemes;
+        List<Phoneme> phonemes;
+        List<PhonologicalRule> rules;
 
         public Phonology()
         {

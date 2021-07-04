@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace GetheodeEngine
 {
@@ -30,9 +31,9 @@ namespace GetheodeEngine
 
         public enum FeatureState
         {
+            Zero,
             Positive,
-            Negative,
-            Zero
+            Negative
         }
 
         /// <summary>All the feature labels in order</summary>
@@ -70,7 +71,6 @@ namespace GetheodeEngine
                 "found in the list of features.");
         }
 
-
         public IPAChar(FeatureState[] features)
         {
             this.features = features;
@@ -84,11 +84,14 @@ namespace GetheodeEngine
                 if (ipachar.Value == this)
                     return ipachar.Key;
             }
-            string tostring = "?[";
+            string tostring = "[";
             for(int i=0; i<features.Length; i++)
             {
                 if (features[i] != FeatureState.Zero)
-                    tostring += features[i].ToString() + featureNames[i];
+                {
+                    char s = features[i] == FeatureState.Positive ? '+' : '-';
+                    tostring += s + featureNames[i];
+                }
             }
             tostring += "]";
             return tostring;
@@ -143,7 +146,50 @@ namespace GetheodeEngine
 
         public static explicit operator IPAChar(string c)
         {
-            return IpaCharLib[c];
+            c = c.Trim('[', ']');
+            try
+            {
+                return IpaCharLib[c];
+            }
+            catch
+            {
+                c = Regex.Replace(c, @"\s+", "");
+                string[] featureStrings = Regex.Split(c, @"(?<!^)(?=[+-])");
+                FeatureState[] features = new FeatureState[featureNames.Length];
+                for(int i=0; i<featureStrings.Length; i++)
+                {
+                    if(featureStrings[i] != "")
+                    {
+                        string featureName = featureStrings[i].Substring(1);
+                        char stateStr = featureStrings[i][0];
+                        FeatureState state = stateStr == '+' ?
+                            FeatureState.Positive : FeatureState.Negative;
+
+                        features[Array.IndexOf(featureNames, featureName)] = state;
+                    }
+                }
+                return new IPAChar(features);
+            }
+        }
+
+        /// <summary>
+        /// Overrides the features of the left IPAChar to match the non-zero
+        /// features of the right IPAChar. In a way, it "overlays" the
+        /// modifying char onto the original char
+        /// </summary>
+        /// <param name="left">The original char</param>
+        /// <param name="right">The modifying char</param>
+        /// <returns></returns>
+        public static IPAChar operator +(IPAChar left, IPAChar right)
+        {
+            FeatureState[] combinedFeatures = left.features;
+            for(int i=0; i<left.features.Length; i++)
+            {
+                FeatureState f = right.features[i];
+                if (f != FeatureState.Zero)
+                    left.features[i] = right.features[i];
+            }
+            return new IPAChar(combinedFeatures);
         }
 
         public static bool operator ==(IPAChar left, IPAChar right)
