@@ -9,6 +9,8 @@ namespace GetheodeEngine
         IPAChar preContext;
         IPAChar postContext;
 
+        string name;
+
         /// <summary>
         /// A rule that maps one segment or set of segments to another using
         /// contexts.
@@ -30,6 +32,19 @@ namespace GetheodeEngine
             string[] context = s[1].Split('_');
             preContext = (IPAChar)context[0];
             postContext = (IPAChar)context[1];
+
+            name = ruleString;
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is PhonologicalRule rule &&
+                   name == rule.name;
+        }
+
+        public override string ToString()
+        {
+            return name;
         }
     }
 }

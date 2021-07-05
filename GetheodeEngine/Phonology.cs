@@ -11,14 +11,15 @@ namespace GetheodeEngine
         public Phonology()
         {
             phonemes = new List<Phoneme>();
+            rules = new List<PhonologicalRule>();
         }
 
-        public void AddPhoneme(Phoneme phoneme)
+        public void AddRule(string rule)
         {
-            phonemes.Add(phoneme);
+            rules.Add(new PhonologicalRule(rule));
         }
 
-        public void RemovePhoneme(Phoneme phoneme)
+        public void RemoveRule(Phoneme phoneme)
         {
             phonemes.Remove(phoneme);
         }
