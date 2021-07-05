@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace GetheodeEngine
 {
@@ -45,6 +46,27 @@ namespace GetheodeEngine
         public override string ToString()
         {
             return name;
+        }
+
+        /// <summary>Changes the morpheme according to the rule</summary>
+        /// <param name="morpheme">The sequence of segments to modify</param>
+        public void ApplyToMorpheme(List<IPAChar> morpheme)
+        {   
+            for(int i=0; i<morpheme.Count; i++)
+            {
+                IPAChar cur = morpheme[i];
+                // check if matches input
+                if (!input.Includes(cur))
+                    continue;
+                // if matches pre context
+                if (i == 0 || !preContext.Includes(morpheme[i - 1]))
+                    continue;
+                // if matches pre context
+                if (i == morpheme.Count - 1 || !postContext.Includes(morpheme[i + 1]))
+                    continue;
+
+                morpheme[i] = cur + output;
+            }
         }
     }
 }

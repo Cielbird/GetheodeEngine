@@ -5,6 +5,7 @@ namespace GetheodeEngine
     {
         public string Name { get; set; }
         public Phonology Phonology { get; set; }
+        public Lexicon Lexicon { get; set; }
 
         public Lect(string name)
         {

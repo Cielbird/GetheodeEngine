@@ -76,6 +76,17 @@ namespace GetheodeEngine
             this.features = features;
         }
 
+        internal bool Includes(IPAChar input)
+        {
+            for(int i=0; i<features.Length; i++)
+            {
+                if (features[i] != FeatureState.Zero
+                    && input.features[i] != features[i])
+                    return false;
+            }
+            return true;
+        }
+
         public override string ToString()
         {
             //
@@ -149,7 +160,7 @@ namespace GetheodeEngine
             c = c.Trim('[', ']');
             try
             {
-                return IpaCharLib[c];
+                return (IPAChar)IpaCharLib[c].MemberwiseClone();
             }
             catch
             {
@@ -182,12 +193,12 @@ namespace GetheodeEngine
         /// <returns></returns>
         public static IPAChar operator +(IPAChar left, IPAChar right)
         {
-            FeatureState[] combinedFeatures = left.features;
+            FeatureState[] combinedFeatures = (FeatureState[])left.features.Clone();
             for(int i=0; i<left.features.Length; i++)
             {
                 FeatureState f = right.features[i];
                 if (f != FeatureState.Zero)
-                    left.features[i] = right.features[i];
+                    combinedFeatures[i] = right.features[i];
             }
             return new IPAChar(combinedFeatures);
         }

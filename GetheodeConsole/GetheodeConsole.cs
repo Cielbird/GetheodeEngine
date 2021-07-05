@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using GetheodeEngine;
 
 class GetheodeConsole
@@ -10,6 +11,18 @@ class GetheodeConsole
 
     static void Main()
     {
+        print((IPAChar)"t" + (IPAChar)"[+voi]");
+
+        List<IPAChar> tzeer = new List<IPAChar>()
+        {
+            (IPAChar)"t",
+            (IPAChar)"z",
+            (IPAChar)"i",
+            (IPAChar)"r",
+        };
+        new PhonologicalRule("[-syl] -> [-voi] / [-voi]_").ApplyToMorpheme(tzeer);
+
+
         Language english_lang = new Language("english");
         Lect scottish = new Lect("scottish_english");
         scottish.Phonology.AddRule("[] -> [-voi] / [-voi]_");
