@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 namespace GetheodeEngine
@@ -48,24 +49,24 @@ namespace GetheodeEngine
             return name;
         }
 
-        /// <summary>Changes the morpheme according to the rule</summary>
+        /// <summary>Changes the list of ipachars according to the rule</summary>
         /// <param name="morpheme">The sequence of segments to modify</param>
-        public void ApplyToMorpheme(List<IPAChar> morpheme)
+        public void ApplyToSurfaceRep(List<IPAChar> surfaceRep)
         {   
-            for(int i=0; i<morpheme.Count; i++)
+            for(int i=0; i< surfaceRep.Count; i++)
             {
-                IPAChar cur = morpheme[i];
+                IPAChar cur = surfaceRep[i];
                 // check if matches input
                 if (!input.Includes(cur))
                     continue;
                 // if matches pre context
-                if (i == 0 || !preContext.Includes(morpheme[i - 1]))
+                if (i == 0 || !preContext.Includes(surfaceRep[i - 1]))
                     continue;
                 // if matches pre context
-                if (i == morpheme.Count - 1 || !postContext.Includes(morpheme[i + 1]))
+                if (i == surfaceRep.Count - 1 || !postContext.Includes(surfaceRep[i + 1]))
                     continue;
 
-                morpheme[i] = cur + output;
+                surfaceRep[i] = cur + output;
             }
         }
     }

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+
 namespace GetheodeEngine
 {
     public class Lect
@@ -11,6 +13,7 @@ namespace GetheodeEngine
         {
             Name = name;
             Phonology = new Phonology();
+            Lexicon = new Lexicon();
         }
 
         public override string ToString()
@@ -18,6 +21,23 @@ namespace GetheodeEngine
             string tostring = Name + " :" + GetHashCode() + "\n";
             tostring += Phonology.ToString();
             return tostring;
+        }
+
+        public List<IPAChar> GetSurfaceRepresentation(Morpheme morpheme)
+        {
+            List<IPAChar> UR = morpheme.UnderlyingRepresentation.ConvertAll(
+                x => x.BaseRealization);
+
+            foreach(PhonologicalRule rule in Phonology.Rules)
+            {
+                rule.ApplyToSurfaceRep(UR);
+            }
+            return UR;
+        }
+
+        public void AddMorpheme(string romanization)
+        {
+            Lexicon.AddMorpheme(Phonology.GetPhonemesFromRoman(romanization));
         }
     }
 }

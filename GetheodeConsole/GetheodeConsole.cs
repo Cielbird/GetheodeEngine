@@ -11,8 +11,6 @@ class GetheodeConsole
 
     static void Main()
     {
-        print((IPAChar)"t" + (IPAChar)"[+voi]");
-
         List<IPAChar> tzeer = new List<IPAChar>()
         {
             (IPAChar)"t",
@@ -20,12 +18,22 @@ class GetheodeConsole
             (IPAChar)"i",
             (IPAChar)"r",
         };
-        new PhonologicalRule("[-syl] -> [-voi] / [-voi]_").ApplyToMorpheme(tzeer);
 
 
         Language english_lang = new Language("english");
         Lect scottish = new Lect("scottish_english");
-        scottish.Phonology.AddRule("[] -> [-voi] / [-voi]_");
+        scottish.Phonology.AddRule("[-syl] -> [-voi] / [-voi]_");
+
+        scottish.Phonology.AddPhoneme((IPAChar)"t");
+        scottish.Phonology.AddPhoneme((IPAChar)"z");
+        scottish.Phonology.AddPhoneme((IPAChar)"i", "ee");
+        scottish.Phonology.AddPhoneme((IPAChar)"r");
+        scottish.Phonology.AddPhoneme((IPAChar)"s");
+
+        scottish.AddMorpheme("tzeer");
+
+        List<IPAChar> tzirSurfRep = scottish.GetSurfaceRepresentation(scottish.Lexicon.GetMorphemes()[0]);
+
         english_lang.Lects.Add(scottish);
         print(english_lang);
     }

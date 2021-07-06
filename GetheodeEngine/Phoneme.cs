@@ -7,16 +7,20 @@ namespace GetheodeEngine
     // it is useless for now.
     public class Phoneme
     {
-        readonly IPAChar baseRealization;
+        public string Romanization { get; }
+        public IPAChar BaseRealization { get; }
 
-        public Phoneme(IPAChar baseRealization)
+        public Phoneme(string roman, IPAChar baseRealization)
         {
-            this.baseRealization = baseRealization;
+            BaseRealization = baseRealization;
+            Romanization = roman;
         }
 
         public override string ToString()
         {
-            return baseRealization.ToString();
+            if (Romanization == BaseRealization.ToString())
+                return Romanization;
+            return Romanization + "[" + BaseRealization.ToString() + "]";
         }
     }
 }
