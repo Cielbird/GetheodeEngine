@@ -6,10 +6,10 @@ namespace GetheodeEngine
 {
     public class PhonologicalRule
     {
-        IPAChar input;
-        IPAChar output;
-        IPAChar preContext;
-        IPAChar postContext;
+        public IPAChar Input { get; }
+        public IPAChar Output { get; }
+        public IPAChar PreContext { get; }
+        public IPAChar PostContext { get; }
 
         string name;
 
@@ -28,12 +28,12 @@ namespace GetheodeEngine
             string[] s = ruleString.Split('/');
 
             string[] io = Regex.Split(s[0], "->");
-            input = (IPAChar)io[0];
-            output = (IPAChar)io[1];
+            Input = (IPAChar)io[0];
+            Output = (IPAChar)io[1];
 
             string[] context = s[1].Split('_');
-            preContext = (IPAChar)context[0];
-            postContext = (IPAChar)context[1];
+            PreContext = (IPAChar)context[0];
+            PostContext = (IPAChar)context[1];
 
             name = ruleString;
         }
@@ -47,27 +47,6 @@ namespace GetheodeEngine
         public override string ToString()
         {
             return name;
-        }
-
-        /// <summary>Changes the list of ipachars according to the rule</summary>
-        /// <param name="morpheme">The sequence of segments to modify</param>
-        public void ApplyToSurfaceRep(List<IPAChar> surfaceRep)
-        {   
-            for(int i=0; i< surfaceRep.Count; i++)
-            {
-                IPAChar cur = surfaceRep[i];
-                // check if matches input
-                if (!input.Includes(cur))
-                    continue;
-                // if matches pre context
-                if (i == 0 || !preContext.Includes(surfaceRep[i - 1]))
-                    continue;
-                // if matches pre context
-                if (i == surfaceRep.Count - 1 || !postContext.Includes(surfaceRep[i + 1]))
-                    continue;
-
-                surfaceRep[i] = cur + output;
-            }
         }
     }
 }

@@ -23,14 +23,13 @@ namespace GetheodeEngine
             return tostring;
         }
 
-        public List<IPAChar> GetSurfaceRepresentation(Morpheme morpheme)
+        public SegmentSequence GetSurfaceRepresentation(Morpheme morpheme)
         {
-            List<IPAChar> UR = morpheme.UnderlyingRepresentation.ConvertAll(
-                x => x.BaseRealization);
+            SegmentSequence UR = new SegmentSequence(morpheme);
 
             foreach(PhonologicalRule rule in Phonology.Rules)
             {
-                rule.ApplyToSurfaceRep(UR);
+                UR.ApplyPhonologicalRule(rule);
             }
             return UR;
         }
