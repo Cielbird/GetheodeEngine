@@ -15,7 +15,7 @@ namespace GetheodeEngine
             public List<IPAChar> segments = new List<IPAChar>();
         }
 
-        List<Sylable> sylables = new List<Sylable>();
+        List<Sylable> sylables;
 
         // easy indexing
         public IPAChar this[int key]
@@ -57,6 +57,7 @@ namespace GetheodeEngine
                     if (count == key)
                     {
                         sylables[syl].segments[seg] = value;
+                        return;
                     }
 
                     // increment indices
@@ -109,7 +110,16 @@ namespace GetheodeEngine
         /// <param name="morpheme"></param>
         public SegmentSequence(Morpheme morpheme)
         {
-
+            sylables = new List<Sylable>();
+            foreach(Morpheme.PhonemeSylable phonSyl in morpheme.Sylables)
+            {
+                Sylable sylable = new Sylable();
+                foreach(Phoneme phoneme in phonSyl.phonemes)
+                {
+                    sylable.segments.Add(phoneme.BaseRealization);
+                }
+                sylables.Add(sylable);
+            }
         }
 
 
@@ -133,6 +143,24 @@ namespace GetheodeEngine
 
                 this[i] = cur + rule.Output;
             }
+        }
+
+        public override string ToString()
+        {
+            string output = "[";
+            foreach(Sylable sylable in sylables)
+            {
+                if(sylable != sylables[0])
+                {
+                    output += ".";
+                }
+                foreach (IPAChar segment in sylable.segments)
+                {
+                    output += segment.ToString();
+                }
+            }
+            output += "]";
+            return output;
         }
     }
 }
