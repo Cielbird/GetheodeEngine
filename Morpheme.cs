@@ -119,11 +119,12 @@ namespace GetheodeEngine
 
         public override string ToString()
         {
-            string roman = "";
+            string roman = "/";
             foreach (Phoneme p in this)
             {
                 roman += p.Romanization;
             }
+            roman += "/";
             return roman;
         }
 

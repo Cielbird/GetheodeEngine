@@ -28,6 +28,19 @@ namespace GetheodeEngine
                 return _ipaCharLib;
             }
         }
+        static Dictionary<char, IPAChar> _diacriticLib;
+        public static Dictionary<char, IPAChar> DiacriticLib
+        {
+            get
+            {
+                if (_diacriticLib == null)
+                {
+                    _diacriticLib = new Dictionary<char, IPAChar>();
+                    LoadAllDiacritics();
+                }
+                return _diacriticLib;
+            }
+        }
 
         public enum FeatureState
         {
@@ -56,8 +69,20 @@ namespace GetheodeEngine
         };
 
         /// <summary>
-        /// All the features in this character
+        /// A char with only `0` features. ie a ipachar
+        /// that includes any segment
         /// </summary>
+        public static IPAChar AnyChar
+        {
+            get
+            {
+                return new IPAChar(new FeatureState[featureNames.Length]);
+            }
+        }
+
+        /// <summary>
+        /// All the features in this character
+        /// </summary>s
         public readonly FeatureState[] features;
 
         public FeatureState GetFeature(string tag)
@@ -145,6 +170,39 @@ namespace GetheodeEngine
             }
         }
 
+        private static void LoadAllDiacritics()
+        {
+            // the data was originally from Bruce Hayes and Eric Biggs:
+            // https://www.linguistics.ucla.edu/people/hayes/IP/#features
+            using (StreamReader reader = new StreamReader("data/diacritics.csv"))
+            {
+                while (!reader.EndOfStream)
+                {
+                    string line = reader.ReadLine();
+                    string[] values = line.Split(',');
+                    if (values[0] == "ipa")
+                        continue;
+
+                    // add a new ipa character to the library
+                    char diacriticChar = values[0][0];
+                    IPAChar ipaChar = new IPAChar(new FeatureState[featureNames.Length]);
+                    for (int i = 1; i < values.Length; i++)
+                    {
+                        // add the feature and it's state to ipaChar
+                        char sc = values[i][0];
+                        FeatureState state =
+                            sc == '+' ?
+                            FeatureState.Positive :
+                            sc == '-' ?
+                            FeatureState.Negative :
+                            FeatureState.Zero;
+                        ipaChar.features[i - 1] = state;
+                    }
+                    DiacriticLib.Add(diacriticChar, ipaChar);
+                }
+            }
+        }
+
         public override bool Equals(object obj)
         {
             return obj is IPAChar c && Equals(c);
@@ -158,12 +216,29 @@ namespace GetheodeEngine
         public static explicit operator IPAChar(string c)
         {
             c = c.Trim('[', ']');
+            // [] includes all characters, ie all `0` features
+            if (c == "")
+                return AnyChar;
             try
-            {
-                return (IPAChar)IpaCharLib[c].MemberwiseClone();
+            { // normal char
+                //try to extract any diacritics:
+                string diacritics = "";
+                char cur = c[^1];
+                while (DiacriticLib.ContainsKey(cur))
+                {
+                    diacritics += cur;
+                    c = c[0..^1];
+                    cur = c[^1];
+                }
+                IPAChar finalchar = (IPAChar)IpaCharLib[c].MemberwiseClone();
+                foreach(char diacritic in diacritics)
+                {
+                    finalchar += DiacriticLib[diacritic];
+                }
+                return finalchar;
             }
             catch
-            {
+            { // bracketed feature list
                 c = Regex.Replace(c, @"\s+", "");
                 string[] featureStrings = Regex.Split(c, @"(?<!^)(?=[+-])");
                 FeatureState[] features = new FeatureState[featureNames.Length];
@@ -203,14 +278,15 @@ namespace GetheodeEngine
             return new IPAChar(combinedFeatures);
         }
 
+        public static bool operator !=(IPAChar left, IPAChar right)
+        {
+            return !(left == right);
+        }
+
         public static bool operator ==(IPAChar left, IPAChar right)
         {
             return left.Equals(right);
         }
 
-        public static bool operator !=(IPAChar left, IPAChar right)
-        {
-            return !(left == right);
-        }
     }
 }

@@ -135,11 +135,17 @@ namespace GetheodeEngine
                 if (!rule.Input.Includes(cur))
                     continue;
                 // if matches pre context
-                if (i == 0 || !rule.PreContext.Includes(this[i - 1]))
-                    continue;
+                if (rule.PreContext != IPAChar.AnyChar)
+                {
+                    if (i == 0 || !rule.PreContext.Includes(this[i - 1]))
+                        continue;
+                }
                 // if matches pre context
-                if (i == Count - 1 || !rule.PostContext.Includes(this[i + 1]))
-                    continue;
+                if (rule.PostContext != IPAChar.AnyChar)
+                {
+                    if (i == Count - 1 || !rule.PostContext.Includes(this[i + 1]))
+                        continue;
+                }
 
                 this[i] = cur + rule.Output;
             }
