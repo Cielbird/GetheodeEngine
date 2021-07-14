@@ -63,12 +63,16 @@ namespace GetheodeEngine
                 Phoneme bestMatch = null;
                 foreach (Phoneme phoneme in Phonemes)
                 {
-                    Match match = Regex.Match(roman, phoneme.Romanization);
-                    if (match.Success && match.Index == parseIndex)
+                    MatchCollection matches = Regex.Matches(roman, phoneme.Romanization);
+                    foreach (Match match in matches)
                     {
-                        if (bestMatch == null || phoneme.Romanization.Length > bestMatch.Romanization.Length)
+                        if (match.Success && match.Index == parseIndex)
                         {
-                            bestMatch = phoneme;
+                            if (bestMatch == null || phoneme.Romanization.Length > bestMatch.Romanization.Length)
+                            {
+                                bestMatch = phoneme;
+                                break;
+                            }
                         }
                     }
                 }

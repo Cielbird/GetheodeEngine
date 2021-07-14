@@ -101,25 +101,81 @@ namespace GetheodeEngine
             this.features = features;
         }
 
-        internal bool Includes(IPAChar input)
+        public bool Includes(IPAChar other)
         {
             for(int i=0; i<features.Length; i++)
             {
                 if (features[i] != FeatureState.Zero
-                    && input.features[i] != features[i])
+                    && other.features[i] != features[i])
                     return false;
             }
             return true;
         }
 
+        public int DistanceTo(IPAChar other)
+        {
+            int[] positions = { 0, 1, -1 };
+            int dist = 0;
+            for (int i = 0; i < features.Length; i++)
+            {
+                dist += Math.Abs(positions[(int)features[i]]
+                    - positions[(int)other.features[i]]);
+            }
+            return dist;
+        }
+
         public override string ToString()
         {
-            //
-            foreach(KeyValuePair<string, IPAChar> ipachar in IpaCharLib)
+            // look for any ipachar in the library that includes ours, then
+            // see if we can add diacritics to fit our ipachar
+            int dist = int.MaxValue;
+            // get base char
+            Stack<KeyValuePair<string, IPAChar>> charStack = new Stack<KeyValuePair<string, IPAChar>>();
+
+            // since we need a dictionary with string keys (vs char keys),
+            // convert the diacritics dicitonary
+            Dictionary<string, IPAChar> diacriticsAsStr = new Dictionary<string, IPAChar>();
+            foreach (KeyValuePair<char, IPAChar> d in DiacriticLib)
+                diacriticsAsStr.Add(d.Key.ToString(), d.Value);
+
+            while(dist != 0)
             {
-                if (ipachar.Value == this)
-                    return ipachar.Key;
+                KeyValuePair<string, IPAChar> bestChar =
+                    new KeyValuePair<string, IPAChar>();
+
+                // add all the ipachars of the stack together
+                IPAChar compiledStack = AnyChar;
+                foreach (KeyValuePair<string, IPAChar> c in charStack)
+                    compiledStack += c.Value;
+
+                foreach (KeyValuePair<string, IPAChar> ipachar in charStack.Count == 0 ? IpaCharLib : diacriticsAsStr)
+                {
+                    int nextDist = DistanceTo(compiledStack + ipachar.Value);
+                    if (nextDist < dist)
+                    {
+                        dist = nextDist;
+                        bestChar = ipachar;
+                    }
+                }
+                if (dist == int.MaxValue)
+                {
+                    // in this case, no diacritic was found to improve the
+                    // distance to `this`, so we can pop the last
+                    // diacritic off the stack.
+                    charStack.Pop();
+                }
+                else
+                {
+                    charStack.Push(bestChar);
+                }
             }
+
+            string finalString = "";
+            foreach (KeyValuePair<string, IPAChar> c in charStack)
+                finalString = c.Key + finalString;
+            return finalString;
+
+            // just list all the non-zero features
             string tostring = "[";
             for(int i=0; i<features.Length; i++)
             {
@@ -273,7 +329,7 @@ namespace GetheodeEngine
             {
                 FeatureState f = right.features[i];
                 if (f != FeatureState.Zero)
-                    combinedFeatures[i] = right.features[i];
+                    combinedFeatures[i] = f;
             }
             return new IPAChar(combinedFeatures);
         }
