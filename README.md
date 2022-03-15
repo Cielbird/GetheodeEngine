@@ -33,14 +33,14 @@ Example:
 ```
 æ, a
 e, e
-i:, ee
+iː, ee
 ```
 
 In cases where you wish the romanization to be the same as the IPA, you can leave out the romanization:
 ```
 æ, a
 e
-i:, ee
+iː, ee
 ```
 
 ### Rules
