@@ -21,6 +21,8 @@ https://linguistics.ucla.edu/people/hayes/IP/#features
 
 [What is a phoneme?](https://en.wikipedia.org/wiki/Phoneme)
 
+Rules can be added to a Lect by using `Lect.ImportPhonemes(string filePath)`.
+
 They are written in a `.csv` file.
 Each phoneme is written as:
 ```
