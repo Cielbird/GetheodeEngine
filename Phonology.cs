@@ -8,11 +8,13 @@ namespace GetheodeEngine
     {
         public List<Phoneme> Phonemes { get; }
         public List<PhonologicalRule> Rules { get; }
+        public PhonotacticGraph Phonotactics { get; set; }
 
         public Phonology()
         {
             Phonemes = new List<Phoneme>();
             Rules = new List<PhonologicalRule>();
+            Phonotactics = new PhonotacticGraph("MORPH = ", this);
         }
 
         public void AddRule(string rule)
@@ -55,37 +57,23 @@ namespace GetheodeEngine
         /// `roman`</returns>
         public List<Phoneme> GetPhonemesFromRoman(string roman)
         {
-            List<Phoneme> phonemes = new List<Phoneme>();
-            int parseIndex = 0;
-            while (parseIndex < roman.Length)
+            //strip whitespace
+            roman = Regex.Replace(roman, @"\s+", "");
+
+            List<string> allPhonemes = Phonemes.ConvertAll(e => e.Romanization);
+
+            string[] splitRomanization = roman.SplitUsingKeywords(allPhonemes);
+
+            List<Phoneme> phonemes = new();
+            foreach (string phonemeRoman in splitRomanization)
             {
-                //get best match (ex, 'ts' is a better match than 't')
-                Phoneme bestMatch = null;
-                foreach (Phoneme phoneme in Phonemes)
+                foreach(Phoneme phoneme in Phonemes)
                 {
-                    MatchCollection matches = Regex.Matches(roman, phoneme.Romanization);
-                    foreach (Match match in matches)
-                    {
-                        if (match.Success && match.Index == parseIndex)
-                        {
-                            if (bestMatch == null || phoneme.Romanization.Length > bestMatch.Romanization.Length)
-                            {
-                                bestMatch = phoneme;
-                                break;
-                            }
-                        }
-                    }
+                    if (phonemeRoman == phoneme.Romanization)
+                        phonemes.Add(phoneme);
                 }
-
-                //if no match is found, keep looking 
-                if (bestMatch == null)
-                    throw new ArgumentException(
-                        "the romanization is invalid, couldn't find any " +
-                        "phonemes for \"" + roman.Substring(parseIndex) + "\"");
-
-                phonemes.Add(bestMatch);
-                parseIndex += bestMatch.Romanization.Length;
             }
+
             return phonemes;
         }
 

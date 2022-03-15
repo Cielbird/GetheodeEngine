@@ -16,7 +16,7 @@ namespace GetheodeEngine
         /// It can't be a char, since affricates are 3 unicode
         /// characters
         static Dictionary<string, IPAChar> _ipaCharLib;
-        static Dictionary<string, IPAChar> IpaCharLib
+        public static Dictionary<string, IPAChar> IpaCharLib
         {
             get
             {
@@ -131,6 +131,7 @@ namespace GetheodeEngine
             int dist = int.MaxValue;
             // get base char
             Stack<KeyValuePair<string, IPAChar>> charStack = new Stack<KeyValuePair<string, IPAChar>>();
+            List<KeyValuePair<string, IPAChar>> visited = new List<KeyValuePair<string, IPAChar>>();
 
             // since we need a dictionary with string keys (vs char keys),
             // convert the diacritics dicitonary
@@ -138,7 +139,7 @@ namespace GetheodeEngine
             foreach (KeyValuePair<char, IPAChar> d in DiacriticLib)
                 diacriticsAsStr.Add(d.Key.ToString(), d.Value);
 
-            while(dist != 0)
+            while (dist != 0)
             {
                 KeyValuePair<string, IPAChar> bestChar =
                     new KeyValuePair<string, IPAChar>();
@@ -148,25 +149,40 @@ namespace GetheodeEngine
                 foreach (KeyValuePair<string, IPAChar> c in charStack)
                     compiledStack += c.Value;
 
+                bool distanceImproved = false;
+
                 foreach (KeyValuePair<string, IPAChar> ipachar in charStack.Count == 0 ? IpaCharLib : diacriticsAsStr)
                 {
+                    // don't revisit the same diacritics or characters
+                    if (visited.Contains(ipachar))
+                        continue;
+
                     int nextDist = DistanceTo(compiledStack + ipachar.Value);
                     if (nextDist < dist)
                     {
+                        distanceImproved = true;
                         dist = nextDist;
                         bestChar = ipachar;
                     }
                 }
-                if (dist == int.MaxValue)
+
+                if (!distanceImproved)
                 {
+                    // if distance wasn't able to acheive 0, we can't
+                    // represent the char with pretty ipa characters
+                    // so just list the features
+                    if (charStack.Count == 0)
+                        return GetListedFeaturesString();
                     // in this case, no diacritic was found to improve the
                     // distance to `this`, so we can pop the last
                     // diacritic off the stack.
                     charStack.Pop();
+
                 }
                 else
                 {
                     charStack.Push(bestChar);
+                    visited.Add(bestChar);
                 }
             }
 
@@ -174,10 +190,12 @@ namespace GetheodeEngine
             foreach (KeyValuePair<string, IPAChar> c in charStack)
                 finalString = c.Key + finalString;
             return finalString;
+        }
 
-            // just list all the non-zero features
+        private string GetListedFeaturesString()
+        {
             string tostring = "[";
-            for(int i=0; i<features.Length; i++)
+            for (int i = 0; i < features.Length; i++)
             {
                 if (features[i] != FeatureState.Zero)
                 {
@@ -271,7 +289,7 @@ namespace GetheodeEngine
 
         public static explicit operator IPAChar(string c)
         {
-            c = c.Trim('[', ']');
+            c = Regex.Replace(c.Trim('[', ']'), @"\s+", "");
             // [] includes all characters, ie all `0` features
             if (c == "")
                 return AnyChar;
@@ -293,9 +311,8 @@ namespace GetheodeEngine
                 }
                 return finalchar;
             }
-            catch
+            catch(KeyNotFoundException)
             { // bracketed feature list
-                c = Regex.Replace(c, @"\s+", "");
                 string[] featureStrings = Regex.Split(c, @"(?<!^)(?=[+-])");
                 FeatureState[] features = new FeatureState[featureNames.Length];
                 for(int i=0; i<featureStrings.Length; i++)
@@ -303,6 +320,8 @@ namespace GetheodeEngine
                     if(featureStrings[i] != "")
                     {
                         string featureName = featureStrings[i].Substring(1);
+                        if (!featureNames.Contains(featureName))
+                            throw new ArgumentException(featureName + " is not a feature!");
                         char stateStr = featureStrings[i][0];
                         FeatureState state = stateStr == '+' ?
                             FeatureState.Positive : FeatureState.Negative;
@@ -324,6 +343,10 @@ namespace GetheodeEngine
         /// <returns></returns>
         public static IPAChar operator +(IPAChar left, IPAChar right)
         {
+            if(left.features == null || right.features == null)
+            {
+                throw new ArgumentNullException("the features cannot be null");
+            }
             FeatureState[] combinedFeatures = (FeatureState[])left.features.Clone();
             for(int i=0; i<left.features.Length; i++)
             {
