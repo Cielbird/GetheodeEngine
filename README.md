@@ -17,32 +17,33 @@ https://linguistics.ucla.edu/people/hayes/IP/#features
 
 ## File syntax
 
+Comments can be added with `//` in any file.
+
 ### Phonemes
 
 [What is a phoneme?](https://en.wikipedia.org/wiki/Phoneme)
 
 Rules can be added to a Lect by using `Lect.ImportPhonemes(string filePath)`.
 
-They are written in a `.csv` file.
 Each phoneme is written as:
 ```
-[ipa], [romanization]
+[romanization] = [ipa]
 ```
 
 Romanizations make it easier to read and write morphemes in the language you are creating. The romanization can be any UTF-8 string of characters.
 
 Example:
 ```
-æ, a
-e, e
-iː, ee
+a = æ
+e = e
+ee = iː
 ```
 
 In cases where you wish the romanization to be the same as the IPA, you can leave out the romanization:
 ```
-æ, a
+a = æ
 e
-iː, ee
+ee = iː
 ```
 
 ### Rules
@@ -108,12 +109,13 @@ Morphemes can be added to a Lect by using `Lect.ImportMorphemes(string filePath)
 
 
 ```
+// Nouns
 gato
 perro
 perla
 
+// Adjectives
 con
 sobre
 sin
 ```
-Blank lines are ignored.

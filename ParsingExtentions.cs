@@ -76,5 +76,30 @@ namespace GetheodeEngine
             }
             return output.ToArray();
         }
+
+        /// <summary>
+        /// Parses the lines and enumerates throught them.
+        ///
+        /// Removes comments with //, clears whitespace and skips empty lines.
+        /// </summary>
+        /// <param name="text">The source lines</param>
+        /// <returns>An enumerator that returns each parsed line.</returns>
+        public static IEnumerable<string> GetParsedLines(this string text)
+        {
+            string[] lines = text.Split("\n");
+            foreach (string l in lines)
+            {
+                string line = l;
+                // remove comments
+                line = Regex.Replace(line, @"//.*", "");
+                // clear whitespace
+                line = Regex.Replace(line, @"\s+", "");
+                // skip empty lines
+                if (line == "")
+                    continue;
+
+                yield return line;
+            }
+        }
     }
 }

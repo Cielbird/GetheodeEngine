@@ -54,13 +54,8 @@ namespace GetheodeEngine
             Dictionary<string, string> entries = new();
             Dictionary<string, Node> nodes = new();
             List<string> bans = new();
-            string[] lines = text.Split("\n");
-            foreach (string l in lines)
+            foreach (string line in text.GetParsedLines())
             {
-                string line = Regex.Replace(l, @"\s+", "");
-                if (line == "")
-                    continue;
-
                 Match definitionMatch = Regex.Match(line, @"^([a-zA-Z]+)=([a-zA-Z|]*)$");
                 Match banMatch = Regex.Match(line, @"!=([a-zA-Z|]+)$");
 
@@ -72,8 +67,7 @@ namespace GetheodeEngine
                 else if (banMatch.Success)
                     bans.Add(banMatch.Groups[1].Value);
                 else
-                    throw new ArgumentException($"Couldn't parse the line {l}");
-
+                    throw new ArgumentException($"Couldn't parse the line {line}");
             }
 
             morphemeRoot = BuildGraph("MORPH", entries, nodes);

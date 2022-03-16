@@ -32,13 +32,13 @@ namespace GetheodeEngine
         /// </summary>
         public void AddPhoneme(IPAChar baseRealization)
         {
-            AddPhoneme(baseRealization, baseRealization.ToString());
+            AddPhoneme(baseRealization.ToString(), baseRealization);
         }
 
         /// <summary>
         /// Adds a phoneme with romanization string and base realization
         /// </summary>
-        public void AddPhoneme(IPAChar baseRealization, string romanization)
+        public void AddPhoneme(string romanization, IPAChar baseRealization)
         {
             foreach (Phoneme p in Phonemes)
             {

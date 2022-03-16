@@ -44,7 +44,7 @@ namespace GetheodeEngine
                                 // add a new phoneme
                                 if (values.Length > 1)
                                 {
-                                    lect.Phonology.AddPhoneme((IPAChar)values[0], values[1]);
+                                    lect.Phonology.AddPhoneme(values[0], (IPAChar)values[1]);
                                 }
                                 else
                                 {

@@ -54,20 +54,14 @@ namespace GetheodeEngine
         /// <param name="path">The path of the phoneme file</param>
         public void ImportPhonemes(string path)
         {
-            
-            string[] phonemeLines = File.ReadAllLines(path);
-            foreach (string l in phonemeLines)
+            string text = File.ReadAllText(path);
+            foreach (string line in text.GetParsedLines())
             {
-                string line = Regex.Replace(l, @"\s+", "");
-                if (line == "")
-                    continue;
-
-                string[] values = line.Split(',');
-
+                string[] values = line.Split('=');
 
                 // add a new phoneme
                 if (values.Length > 1)
-                    Phonology.AddPhoneme((IPAChar)values[0], values[1]);
+                    Phonology.AddPhoneme(values[0], (IPAChar)values[1]);
                 else
                     Phonology.AddPhoneme((IPAChar)values[0]);
             }
@@ -89,12 +83,9 @@ namespace GetheodeEngine
         /// <param name="path">The file with morpheme data</param>
         public void ImportMorphemes(string path)
         {
-            string[] morphemeLines = File.ReadAllLines(path);
-            foreach (string l in morphemeLines)
+            string text = File.ReadAllText(path);
+            foreach (string line in text.GetParsedLines())
             {
-                string line = Regex.Replace(l, @"\s+", "");
-                if (line == "")
-                    continue;
                 AddMorpheme(line);
             }
         }
@@ -105,12 +96,9 @@ namespace GetheodeEngine
         /// <param name="path">The file to read from</param>
         public void ImportRules(string path)
         {
-            string[] ruleLines = File.ReadAllLines(path);
-            foreach (string l in ruleLines)
+            string text = File.ReadAllText(path);
+            foreach (string line in text.GetParsedLines())
             {
-                string line = Regex.Replace(l, @"\s+", "");
-                if (line == "")
-                    continue;
                 Phonology.AddRule(line);
             }
         }
