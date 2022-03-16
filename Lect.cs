@@ -113,7 +113,7 @@ namespace GetheodeEngine
             foreach (Phoneme p in Phonology.Phonemes)
             {
                 phonemesText += p.BaseRealization.ToString()
-                       + ", " + p.Romanization + "\n";
+                       + " = " + p.Romanization + "\n";
             }
             File.WriteAllText(path, phonemesText);
         }
