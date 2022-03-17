@@ -23,7 +23,7 @@ Comments can be added with `//` in any file.
 
 [What is a phoneme?](https://en.wikipedia.org/wiki/Phoneme)
 
-Rules can be added to a Lect by using `Lect.ImportPhonemes(string filePath)`.
+Phonemes can be added to a Lect by using `Lect.ImportPhonemes(string filePath)`.
 
 Each phoneme is written as:
 ```
